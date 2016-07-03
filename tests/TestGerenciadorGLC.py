@@ -1,11 +1,63 @@
 from GramaticaLivreContexto import GramaticaLivreContexto
 from GerenciadorGLC import GerenciadorGLC
 import unittest
+import os
 
 
 class TestGerenciadorGLC(unittest.TestCase):
     def setUp(self):
         self.gglc = GerenciadorGLC()
+
+    def test_salva_em_arquivo_as_glcs(self):
+        glc = GramaticaLivreContexto()
+        glc.adiciona_producao("S", "a")
+        glc.adiciona_producao("A","A b")
+        self.gglc.adicionar(glc)
+
+        self.assertTrue(self.gglc.salvar())
+
+    def test_salva_e_carrega_uma_glc_do_arquivo(self):
+        glc = GramaticaLivreContexto()
+        glc.adiciona_producao("S", "a")
+        glc.adiciona_producao("A","A b")
+        self.gglc.adicionar(glc)
+        self.gglc.salvar()
+
+        self.gglc.gramaticas = []
+        self.gglc.carregar()
+        self.assertEquals(len(self.gglc.gramaticas), 1)
+
+    def test_merge_de_glc_ao_carregar_e_add_a_mesma_glc(self):
+        if os.path.exists('dump_glc'):
+            os.remove('dump_glc')
+
+        glc = GramaticaLivreContexto()
+        glc.adiciona_producao("S", "a")
+        glc.adiciona_producao("A","A b")
+
+        self.gglc.adicionar(glc)
+        self.gglc.salvar()
+        self.gglc.carregar()
+
+        self.assertEquals(len(self.gglc.gramaticas), 2)
+
+    def test_merge_de_glc_ao_carregar_do_arquivo(self):
+        glc = GramaticaLivreContexto()
+        glc.adiciona_producao("S", "a")
+        glc.adiciona_producao("A","A b")
+        self.gglc.adicionar(glc)
+        self.gglc.salvar()
+
+        self.gglc.gramaticas = []
+        self.gglc.carregar()
+
+        glc1 = GramaticaLivreContexto()
+        glc1.adiciona_producao("X", "t")
+        glc1.adiciona_producao("B","F q")
+        self.gglc.adicionar(glc1)
+
+        self.assertEquals(len(self.gglc.gramaticas), 2)
+
 
     def test_retorna_true_se_adicionar_a_gramatica(self):
         glc = GramaticaLivreContexto()
