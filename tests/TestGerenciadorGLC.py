@@ -8,6 +8,10 @@ class TestGerenciadorGLC(unittest.TestCase):
     def setUp(self):
         self.gglc = GerenciadorGLC()
 
+    def tearDown(self):
+        if os.path.exists('dump_glc'):
+            os.remove('dump_glc')
+
     def test_salva_em_arquivo_as_glcs(self):
         glc = GramaticaLivreContexto()
         glc.adiciona_producao("S", "a")
@@ -28,9 +32,6 @@ class TestGerenciadorGLC(unittest.TestCase):
         self.assertEquals(len(self.gglc.gramaticas), 1)
 
     def test_merge_de_glc_ao_carregar_e_add_a_mesma_glc(self):
-        if os.path.exists('dump_glc'):
-            os.remove('dump_glc')
-
         glc = GramaticaLivreContexto()
         glc.adiciona_producao("S", "a")
         glc.adiciona_producao("A","A b")
@@ -107,3 +108,13 @@ class TestGerenciadorGLC(unittest.TestCase):
         glc1.adiciona_producao("A","A b")
 
         self.assertTrue(self.gglc.adicionar(glc1))
+
+    def test_inicia_gerenciador_glc_com_gramaticas_do_arquivos(self):
+        glc = GramaticaLivreContexto()
+        glc.adiciona_producao("S", "a")
+        glc.adiciona_producao("A","A b")
+        self.gglc.adicionar(glc)
+        self.gglc.salvar()
+
+        n_gerenciador = GerenciadorGLC()
+        self.assertEquals(len(n_gerenciador.gramaticas), 1)
