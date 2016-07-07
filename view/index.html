@@ -1,0 +1,14 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Manipulacao GLC</title>
+	</head>
+	<body>
+		{% if list %}
+			{% for i in range(len(gramaticas)) %}
+			#{{i}} - {{ gramaticas[i].producoes }} <br />
+			{% end %}
+		{% end %}
+		<br /> <a href="add">Adicione uma GLC</a>
+	</body>
+</html>
