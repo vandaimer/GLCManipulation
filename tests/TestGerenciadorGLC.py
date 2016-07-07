@@ -5,12 +5,14 @@ import os
 
 
 class TestGerenciadorGLC(unittest.TestCase):
+
     def setUp(self):
-        self.gglc = GerenciadorGLC()
+        self.dump = 'test_dump_gramaticas'
+        self.gglc = GerenciadorGLC(self.dump)
 
     def tearDown(self):
-        if os.path.exists('dump_glc'):
-            os.remove('dump_glc')
+        if os.path.exists(self.dump):
+            os.remove(self.dump)
 
     def test_salva_em_arquivo_as_glcs(self):
         glc = GramaticaLivreContexto()
@@ -116,5 +118,5 @@ class TestGerenciadorGLC(unittest.TestCase):
         self.gglc.adicionar(glc)
         self.gglc.salvar()
 
-        n_gerenciador = GerenciadorGLC()
+        n_gerenciador = GerenciadorGLC(self.dump)
         self.assertEquals(len(n_gerenciador.gramaticas), 1)

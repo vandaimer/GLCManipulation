@@ -14,7 +14,7 @@ class GerenciadorGLC:
 
     def salvar(self):
         try:
-            pickle.dump(self.gramaticas, open('dump_glc', 'wb'))
+            pickle.dump(self.gramaticas, open(self.filename, 'wb'))
             return True
         except Exception as e:
             return False
@@ -23,6 +23,4 @@ class GerenciadorGLC:
         if os.path.exists(self.filename) and os.path.getsize(self.filename) > 0:
             glcs_carregadas = pickle.load(open(self.filename, 'rb'))
             for glc in glcs_carregadas:
-                # if not glc in self.gramaticas:
-                #     self.gramaticas.append(glc)
                 self.gramaticas.append(glc)
