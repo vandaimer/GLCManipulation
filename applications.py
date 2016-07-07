@@ -13,34 +13,44 @@ class MainHandler(tornado.web.RequestHandler):
 
     def get(self):
         gramaticas = self.gerenciador_glc.gramaticas
-        self.write(template.load("index.html").generate(gramaticas=gramaticas))
+        self.render("index.html", list=gramaticas)
+
 
 class AddHandler(tornado.web.RequestHandler):
     def initialize(self):
         self.gerenciador_glc = GerenciadorGLC()
 
     def get(self):
-        self.render("add.html")
+        id = self.createGLC()
+        if id != False:
+            return self.redirect('edit/%s' % id)
+
+    def createGLC(self):
+        nGLC = GramaticaLivreContexto()
+        add = self.gerenciador_glc.adicionar(nGLC)
+        if not add:
+            return False
+
+        save = self.gerenciador_glc.salvar()
+        if  not save:
+            return False
+
+        id = len(self.gerenciador_glc.gramaticas)
+        id -= 1
+        return id
+
+class EditHandler(tornado.web.RequestHandler):
+    def initialize(self):
+        self.gerenciador_glc = GerenciadorGLC()
+
+    def get(self, id):
+        id = int(id)
+        gramatica = []
+        gramatica.append(self.gerenciador_glc.gramaticas[id])
+        self.render("add.html",list=gramatica)
 
     def post(self):
-        try:
-            data = tornado.escape.to_basestring(self.request.body)
-            data = json.loads(data)
-
-            nGLC = GramaticaLivreContexto()
-            for NT,producao in data.items():
-                nGLC.adiciona_producao(NT, producao)
-
-            add = self.gerenciador_glc.adicionar(nGLC)
-            if not add:
-                return self.set_status(400, "Não adicionada a GLC")
-
-            save = self.gerenciador_glc.salvar()
-            if  not save:
-                return self.set_status(400, "Não salvo a GLC")
-        except Exception as e:
-            print(e)
-            self.set_status(400, "Bad Content")
+        pass
 
 
 def make_app():
@@ -48,6 +58,7 @@ def make_app():
         (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': 'static'}),
         (r"/", MainHandler),
         (r"/add", AddHandler),
+        (r"/edit/(\d+)", EditHandler),
     ], autoreload=True)
 
     app.settings = {

@@ -2,13 +2,15 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Manipulacao GLC</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
 	</head>
 	<body>
+		{% set gramaticas = list %}
 		{% if list %}
 			{% for i in range(len(gramaticas)) %}
-			#{{i}} - {{ gramaticas[i].producoes }} <br />
+				#{{i}} - {{ gramaticas[i].producoes }} | <a href="edit/{{i}}" target="_blank">EDITAR</a> <br />
 			{% end %}
 		{% end %}
-		<br /> <a href="add">Adicione uma GLC</a>
+		<br /> <a href="add">Adicione uma GLC</a> | <a href="add">NOVO ADD</a>
 	</body>
 </html>
