@@ -8,7 +8,7 @@
 		{% set gramaticas = list %}
 		{% if list %}
 			{% for i in range(len(gramaticas)) %}
-				#{{i}} - {{ gramaticas[i].producoes }} | <a href="edit/{{i}}" target="_blank">EDITAR</a> <br />
+				#{{i}} - {{ gramaticas[i].producoes }} | <a href="edit/{{i}}">EDITAR</a> <br />
 			{% end %}
 		{% end %}
 		<br /> <a href="add">Adicione uma GLC</a> | <a href="add">NOVO ADD</a>

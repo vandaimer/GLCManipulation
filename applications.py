@@ -4,7 +4,6 @@ import tornado.ioloop
 import tornado.web
 import tornado.template as Template
 import os
-import json
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -45,12 +44,22 @@ class EditHandler(tornado.web.RequestHandler):
 
     def get(self, id):
         id = int(id)
-        gramatica = []
-        gramatica.append(self.gerenciador_glc.gramaticas[id])
-        self.render("add.html",list=gramatica)
+        gramatica = self.gerenciador_glc.gramaticas[id]
+        self.render("edit.html", producoes=gramatica.producoes, id=id)
 
-    def post(self):
-        pass
+    def post(self, id):
+        id = int(id)
+        producoes = self.get_arguments('producao[]')
+        nGramatica = GramaticaLivreContexto()
+        for producao in producoes:
+            producao = producao.split(' -> ')
+            nGramatica.adiciona_producao(producao[0], producao[1])
+
+        self.gerenciador_glc.gramaticas[id] = nGramatica
+        save = self.gerenciador_glc.salvar()
+        if not save:
+            return False
+        return self.redirect('/')
 
 
 def make_app():
