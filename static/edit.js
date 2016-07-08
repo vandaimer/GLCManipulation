@@ -28,13 +28,9 @@ EditarGLC = {
 
 				if( !test || test[0].length != value.length )
 				{
-					alert("Regex não é válida.")
+					alert("Produção inválida.")
                     return false;
 				}
-                // var test = regex.test(value);
-                // if( !test ){
-                // }
-				// console.log(test);
             }
 			$(this).parent().submit();
         }

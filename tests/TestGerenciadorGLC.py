@@ -120,3 +120,23 @@ class TestGerenciadorGLC(unittest.TestCase):
 
         n_gerenciador = GerenciadorGLC(self.dump)
         self.assertEquals(len(n_gerenciador.gramaticas), 1)
+
+    def test_remover_gramatica(self):
+        glc = GramaticaLivreContexto()
+        glc.adiciona_producao("S", "a")
+        glc.adiciona_producao("A","A b")
+        self.gglc.adicionar(glc)
+        self.gglc.salvar()
+        self.gglc.remover_by_index(0)
+        self.gglc.salvar()
+
+        n_gerenciador = GerenciadorGLC(self.dump)
+        self.assertEquals(len(n_gerenciador.gramaticas), 0)
+
+    def test_erro_ao_remover_gramatica(self):
+        glc = GramaticaLivreContexto()
+        glc.adiciona_producao("S", "a")
+        glc.adiciona_producao("A","A b")
+        self.gglc.adicionar(glc)
+        self.gglc.salvar()
+        self.assertFalse(self.gglc.remover_by_index(10))

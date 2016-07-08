@@ -35,8 +35,9 @@ class AddHandler(tornado.web.RequestHandler):
             return False
 
         id = len(self.gerenciador_glc.gramaticas)
-        id -= 1
-        return id
+        if id > 0:
+            id -= 1
+        return str(id)
 
 class EditHandler(tornado.web.RequestHandler):
     def initialize(self):
@@ -62,12 +63,27 @@ class EditHandler(tornado.web.RequestHandler):
         return self.redirect('/')
 
 
+class DeleteHandler(tornado.web.RequestHandler):
+    def initialize(self):
+        self.gerenciador_glc = GerenciadorGLC()
+
+    def get(self, id):
+        id = int(id)
+        return self.deleteGLC(id)
+
+    def deleteGLC(self, id):
+        del self.gerenciador_glc.gramaticas[id]
+        self.gerenciador_glc.salvar()
+        return self.redirect('/')
+
+
 def make_app():
     app = tornado.web.Application([
         (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': 'static'}),
         (r"/", MainHandler),
         (r"/add", AddHandler),
         (r"/edit/(\d+)", EditHandler),
+        (r"/delete/(\d+)", DeleteHandler),
     ], autoreload=True)
 
     app.settings = {

@@ -12,6 +12,13 @@ class GerenciadorGLC:
         self.gramaticas.append(glc)
         return True
 
+    def remover_by_index(self, index):
+        try:
+            del self.gramaticas[index]
+            return True
+        except Exception as e:
+            return False
+
     def salvar(self):
         try:
             pickle.dump(self.gramaticas, open(self.filename, 'wb'))
