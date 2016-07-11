@@ -8,31 +8,38 @@ EditarGLC = {
     },
 
     addProducao:function(){
-        var pai = $(this).parent();
-        var clone = $(this).parent().clone();
-        var input = $( clone ).find('input').last();
+        var input = $( 'form' ).find('input').last().clone();
         input.val("");
-        $(pai).find('input').last().after("<br/>");
-        $(pai).find('button').before(input);
+        $('form').append('<br />');
+        $('form').append('<br />');
+        $('form').append(input)
     },
 
     save:function(){
         var inputs = $('.producao');
+        var toRemoval = []
 
         if( inputs.length ){
             var value;
             for( var x=0; x < inputs.length;x++ ){
                 value = inputs[x].value;
-                var regex = /^([A-Z])\s->\s((\w\s)*((\|\s(\w\s)*)?)*\w\b)/g;
-				var test  = value.match(regex);
+                if( value === "" ){
+                    toRemoval.push(inputs[x]);
+                } else {
+                    var regex = /^([A-Z])\s->\s((\w\s)*((\|\s(\w\s)*)?)*\w\b)/g;
+                    var test  = value.match(regex);
 
-				if( !test || test[0].length != value.length )
-				{
-					alert("Produção inválida.")
-                    return false;
-				}
+                    if( !test || test[0].length != value.length )
+                    {
+                        alert("Produção inválida.")
+                        return false;
+                    }
+                }
             }
-			$(this).parent().submit();
+            toRemoval.forEach(function(item){
+                $(item).remove();
+            });
+            $('form').submit();
         }
     }
 }
