@@ -12,7 +12,7 @@
             <div class="pure-u-1-3">
                 <form class="pure-form" action="/edit/{{id}}" method="post" accept-charset="utf-8">
                     <fieldset id="titulo" class="pure-group">
-                        <legend>Adicione as produções abaixo seguindo o enunciado do trabalho</legend>
+                        <legend>Adicione as produções abaixo seguindo as regras do trabalho</legend>
                         {% if len(producoes) %}
                             {% for NT, producao in producoes.items() %}
                                 <input type="text" name="producao[]" value="{{NT}} -> {{''.join(producao)}}" class="producao">
