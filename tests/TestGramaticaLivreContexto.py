@@ -34,3 +34,11 @@ class TestGramaticaLivreContexto(unittest.TestCase):
         self.glc.adiciona_producao("C", "c C")
         self.glc.adiciona_producao("C", "c")
         self.glc.get_first("C")
+
+    def test_follow(self):
+        self.glc.adiciona_producao("S", "A b C")
+        self.glc.adiciona_producao("A", "a A")
+        self.glc.adiciona_producao("A", "a")
+        self.glc.adiciona_producao("C", "c C")
+        self.glc.adiciona_producao("C", "c")
+        self.glc.get_follow("S")
