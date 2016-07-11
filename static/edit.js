@@ -10,9 +10,7 @@ EditarGLC = {
     addProducao:function(){
         var input = $( 'form' ).find('input').last().clone();
         input.val("");
-        $('form').append('<br />');
-        $('form').append('<br />');
-        $('form').append(input)
+        $('form').find('fieldset').append(input)
     },
 
     save:function(){
