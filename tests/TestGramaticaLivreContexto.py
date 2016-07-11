@@ -26,3 +26,11 @@ class TestGramaticaLivreContexto(unittest.TestCase):
     def test_retorna_false_se_a_producao_ja_foi_adiciona_com_um_dado_NT(self):
         self.glc.adiciona_producao("S", "a S")
         self.assertFalse(self.glc.adiciona_producao("S", "a S"))
+
+    def test_first(self):
+        self.glc.adiciona_producao("S", "A b C")
+        self.glc.adiciona_producao("A", "a A")
+        self.glc.adiciona_producao("A", "a")
+        self.glc.adiciona_producao("C", "c C")
+        self.glc.adiciona_producao("C", "c")
+        self.glc.get_first("C")
