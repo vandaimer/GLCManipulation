@@ -77,6 +77,20 @@ class DeleteHandler(tornado.web.RequestHandler):
         return self.redirect('/')
 
 
+class DetailsHandler(tornado.web.RequestHandler):
+    def initialize(self):
+        self.gerenciador_glc = GerenciadorGLC()
+
+    def get(self, id):
+        id = int(id)
+        gramatica = self.gerenciador_glc.obtem_by_index(id)
+        producoes = gramatica.producoes
+        if gramatica != False:
+            first = gramatica.get_all_first()
+            follow = gramatica.get_all_follow()
+            self.render("details.html", producoes=producoes, first=first, follow=follow)
+
+
 def make_app():
     app = tornado.web.Application([
         (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': 'static'}),
@@ -84,6 +98,7 @@ def make_app():
         (r"/add", AddHandler),
         (r"/edit/(\d+)", EditHandler),
         (r"/delete/(\d+)", DeleteHandler),
+        (r"/details/(\d+)", DetailsHandler),
     ], autoreload=True)
 
     app.settings = {

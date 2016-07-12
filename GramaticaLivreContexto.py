@@ -1,4 +1,5 @@
 import string
+import re
 
 class GramaticaLivreContexto:
     def __init__(self):
@@ -13,6 +14,20 @@ class GramaticaLivreContexto:
         if forma_sentencial in self.producoes[nao_terminal]: return False
         self.producoes[nao_terminal].append(forma_sentencial)
         return True
+
+    def get_all_first(self):
+        dict_first = {}
+        for nao_terminal in self.producoes.keys():
+            dict_first[nao_terminal] = self.get_first(nao_terminal)
+
+        return dict_first
+
+    def get_all_follow(self):
+        dict_follows = {}
+        for nao_terminal in self.producoes.keys():
+            dict_follows[nao_terminal] = self.get_follow(nao_terminal)
+
+        return dict_follows
 
     def get_first(self, nao_terminal):
         if nao_terminal not in self.producoes:
@@ -55,6 +70,3 @@ class GramaticaLivreContexto:
                 cont = 0
         print(follow)
         return follow
-
-
-

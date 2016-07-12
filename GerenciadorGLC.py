@@ -12,6 +12,12 @@ class GerenciadorGLC:
         self.gramaticas.append(glc)
         return True
 
+    def obtem_by_index(self, index):
+        try:
+            return self.gramaticas[index]
+        except Exception as e:
+            return False
+
     def remover_by_index(self, index):
         try:
             del self.gramaticas[index]
