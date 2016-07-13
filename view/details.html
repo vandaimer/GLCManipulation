@@ -22,7 +22,7 @@
 						{% for index,value in producoes.items() %}
 							<tr>
 								<td>{{index}}</td>
-								<td>{{value}}</td>
+								<td>{{value[0]}}</td>
 							</tr>
 							{% end %}
 					</table>
@@ -70,12 +70,23 @@
 						<table class="pure-table pure-table-bordered">
 							<thead>
 								<tr>
-									<th>É ambigua?</th>
+									<th>Tem recursão a esquerda?</th>
 									<th>É fatorada?</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr><td>SIM - arrumar çaporra</td><td>NAO - arrumar çaporra</td></tr>
+								<tr>
+									<td>
+										{% if len(recursao) %}
+											SIM: <br /> <br />
+											{% for x in recursao %}
+												{{x}}
+											{% end %}
+										{% else %}
+											NÃO
+										{% end %}
+									</td>
+								<td>NAO - arrumar çaporra</td></tr>
 							</tbody>
 						</table>
 					</div>
