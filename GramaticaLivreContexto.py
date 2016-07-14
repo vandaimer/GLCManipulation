@@ -30,24 +30,48 @@ class GramaticaLivreContexto:
         return dict_follows
 
     def get_first(self, nao_terminal):
-        if nao_terminal not in self.producoes:
-            return False
+        if nao_terminal in string.ascii_lowercase:
+            return nao_terminal
         first = []
         for forma_sentencial in self.producoes[nao_terminal]:
+            # print("forma_sentencial:", forma_sentencial)
             for simbolo in forma_sentencial:
-                if simbolo in string.ascii_lowercase or simbolo in string.digits:
+                if simbolo in string.ascii_lowercase or simbolo in string.digits or simbolo == "&":
                     if simbolo == forma_sentencial[0] and simbolo not in first:
                         first.append(simbolo)
-                elif simbolo in string.ascii_uppercase and simbolo == forma_sentencial[0]:
-                    for n in self.get_first(simbolo):
-                        if n not in first:
-                            first.append(n)
+
+        for forma_sentencial in self.producoes[nao_terminal]:
+            cont = 0
+            epsilon = 0
+            if forma_sentencial[0] in string.ascii_uppercase and forma_sentencial[0] != nao_terminal:
+                # print("forma_sentencial:", forma_sentencial)
+                for m in self.get_first(forma_sentencial[0]):
+                    if m in string.ascii_lowercase and m not in first:
+                        first.append(m)
+                i = 0
+                while len(forma_sentencial) > i and forma_sentencial[i] in string.ascii_uppercase:
+                    cont += 1
+                    if forma_sentencial[i] != nao_terminal and "&" in self.get_first(forma_sentencial[i]):
+                        epsilon += 1
+                        if len(forma_sentencial) > i+2 and forma_sentencial[i+2] != nao_terminal:
+                            if forma_sentencial[i+2] in string.ascii_lowercase:
+                                cont = -1
+                            for n in self.get_first(forma_sentencial[i+2]):
+                                if n in string.ascii_lowercase and n not in first:
+                                    first.append(n)
+                    i += 2
+                if cont == epsilon and "&" not in first:
+                    first.append("&")
+            # print(forma_sentencial, cont, epsilon)
+
+        # print("First de ", nao_terminal, first)
         return first
 
     def get_follow(self, nao_terminal):
         if nao_terminal not in self.producoes:
-            return False
+            return "###"
         follow = []
+        epsilon = False
         cont = 0
         if nao_terminal == self.inicial:
             follow.append("$")
@@ -65,8 +89,18 @@ class GramaticaLivreContexto:
                                 follow.append(aux)
                         elif aux in string.ascii_uppercase:
                             for n in self.get_first(aux):
-                                follow.append(n)
+                                if n not in follow and n != "&":
+                                    follow.append(n)
+                                elif n == "&":
+                                    epsilon = True
+                            if epsilon:
+                                for m in self.get_follow(aux):
+                                    if m not in follow and m != "$":
+                                        follow.append(m)
+                                    elif m == "$" and len(producao) <= cont + 4 and "$" not in follow:
+                                        follow.append("$")
+                                epsilon = False
                     cont += 1
                 cont = 0
-        print(follow)
+        # print("Follow de ", nao_terminal, follow)
         return follow

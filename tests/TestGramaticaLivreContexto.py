@@ -28,17 +28,73 @@ class TestGramaticaLivreContexto(unittest.TestCase):
         self.assertFalse(self.glc.adiciona_producao("S", "a S"))
 
     def test_first(self):
-        self.glc.adiciona_producao("S", "A b C")
+        # self.glc.adiciona_producao("S", "A B C")
+        # self.glc.adiciona_producao("A", "a A")
+        # self.glc.adiciona_producao("A", "a")
+        # self.glc.adiciona_producao("A", "&")
+        #
+        # self.glc.adiciona_producao("B", "b")
+        # self.glc.adiciona_producao("B", "&")
+        #
+        # self.glc.adiciona_producao("C", "c")
+        # self.glc.adiciona_producao("C", "&")
+
+        # self.glc.adiciona_producao("S", "A B C")
+        #
+        # self.glc.adiciona_producao("A", "a A")
+        # self.glc.adiciona_producao("A", "&")
+        #
+        # self.glc.adiciona_producao("B", "b B")
+        # self.glc.adiciona_producao("B", "A C d")
+        #
+        # self.glc.adiciona_producao("C", "c C")
+        # self.glc.adiciona_producao("C", "&")
+
+        self.glc.adiciona_producao("S", "A b C D")
+        self.glc.adiciona_producao("S", "E F")
         self.glc.adiciona_producao("A", "a A")
-        self.glc.adiciona_producao("A", "a")
-        self.glc.adiciona_producao("C", "c C")
+        self.glc.adiciona_producao("A", "&")
+        self.glc.adiciona_producao("C", "E C F")
         self.glc.adiciona_producao("C", "c")
-        self.glc.get_first("C")
+        self.glc.adiciona_producao("D", "C D")
+        self.glc.adiciona_producao("D", "d D d")
+        self.glc.adiciona_producao("D", "&")
+        self.glc.adiciona_producao("E", "e E")
+        self.glc.adiciona_producao("E", "&")
+        self.glc.adiciona_producao("F", "F S")
+        self.glc.adiciona_producao("F", "f F")
+        self.glc.adiciona_producao("F", "g")
+
+        self.glc.get_first("S")
 
     def test_follow(self):
-        self.glc.adiciona_producao("S", "A b C")
+        # self.glc.adiciona_producao("S", "A b C")
+        # self.glc.adiciona_producao("A", "a A")
+        # self.glc.adiciona_producao("A", "a")
+        # self.glc.adiciona_producao("C", "c C")
+        # self.glc.adiciona_producao("C", "c")
+
+        # self.glc.adiciona_producao("S", "A B C")
+        # self.glc.adiciona_producao("A", "a A")
+        # self.glc.adiciona_producao("A", "&")
+        # self.glc.adiciona_producao("B", "b B")
+        # self.glc.adiciona_producao("B", "A C d")
+        # self.glc.adiciona_producao("C", "c C")
+        # self.glc.adiciona_producao("C", "&")
+
+        self.glc.adiciona_producao("S", "A b C D")
+        self.glc.adiciona_producao("S", "E F")
         self.glc.adiciona_producao("A", "a A")
-        self.glc.adiciona_producao("A", "a")
-        self.glc.adiciona_producao("C", "c C")
+        self.glc.adiciona_producao("A", "&")
+        self.glc.adiciona_producao("C", "E C F")
         self.glc.adiciona_producao("C", "c")
-        self.glc.get_follow("S")
+        self.glc.adiciona_producao("D", "C D")
+        self.glc.adiciona_producao("D", "d D d")
+        self.glc.adiciona_producao("D", "&")
+        self.glc.adiciona_producao("E", "e E")
+        self.glc.adiciona_producao("E", "&")
+        self.glc.adiciona_producao("F", "F S")
+        self.glc.adiciona_producao("F", "f F")
+        self.glc.adiciona_producao("F", "g")
+
+        self.glc.get_follow("C")
