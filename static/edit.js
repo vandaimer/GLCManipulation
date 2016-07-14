@@ -24,7 +24,7 @@ EditarGLC = {
                 if( value === "" ){
                     toRemoval.push(inputs[x]);
                 } else {
-                    var regex = /^([A-Z])\s->\s((\w\s)*((\|\s(\w\s)*)?)*\w\b)/g;
+                    var regex = /^([A-Z])\s->(\s(\&(\s\||$)|\w{1,2})(\s\|)?)*$/;
                     var test  = value.match(regex);
 
                     if( !test || test[0].length != value.length )

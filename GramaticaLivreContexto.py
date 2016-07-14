@@ -15,6 +15,18 @@ class GramaticaLivreContexto:
         self.producoes[nao_terminal].append(forma_sentencial)
         return True
 
+    #SO TA VERIFICANDO RECURSAO ESQUERDA
+    def recursao_esquerda(self):
+        list_to_return  = []
+        for nt, producao in self.producoes.items():
+            if nt in producao[0]:
+                split = producao[0].split('|')
+                for forma_sentencial in split:
+                    if nt in forma_sentencial:
+                        list_to_return.append("%s -> %s" % (nt, forma_sentencial.strip()))
+                        break
+        return list_to_return
+
     def get_all_first(self):
         dict_first = {}
         for nao_terminal in self.producoes.keys():
