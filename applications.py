@@ -85,11 +85,15 @@ class DetailsHandler(tornado.web.RequestHandler):
         id = int(id)
         gramatica = self.gerenciador_glc.obtem_by_index(id)
         producoes = gramatica.producoes
-        recursao = gramatica.recursao_esquerda()
+        recursao_esquerda_direta = gramatica.recursao_esquerda_direta()
+        recursao_esquerda_indireta = gramatica.recursao_esquerda_indireta()
         if gramatica != False:
             first = gramatica.get_all_first()
             follow = gramatica.get_all_follow()
-            self.render("details.html", producoes=producoes, recursao=recursao, first=first, follow=follow)
+            self.render("details.html", producoes=producoes,
+                        recursao_esquerda_direta=recursao_esquerda_direta,
+                        recursao_esquerda_indireta=recursao_esquerda_indireta,
+                        first=first, follow=follow)
 
 
 def make_app():
