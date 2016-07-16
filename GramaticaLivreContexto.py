@@ -218,7 +218,9 @@ class GramaticaLivreContexto:
         return True
 
     def is_LL1(self):
-        if self.recursao_esquerda() != []:
+        if self.recursao_esquerda_direta() != []:
+            return False
+        if self.recursao_esquerda_indireta() != []:
             return False
         if self.nd_direto() != []:
             return False
