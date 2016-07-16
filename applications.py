@@ -46,12 +46,15 @@ class EditHandler(tornado.web.RequestHandler):
     def get(self, id):
         id = int(id)
         gramatica = self.gerenciador_glc.gramaticas[id]
-        self.render("edit.html", producoes=gramatica.producoes, id=id)
+        identificador = gramatica.identificador
+        self.render("edit.html", producoes=gramatica.producoes, identificador=identificador,
+                    id=id)
 
     def post(self, id):
         id = int(id)
         producoes = self.get_arguments('producao[]')
-        nGramatica = GramaticaLivreContexto()
+        identificador = self.get_argument('identificador')
+        nGramatica = GramaticaLivreContexto(identificador)
         for producao in producoes:
             producao = producao.split(' -> ')
             nGramatica.adiciona_producao(producao[0], producao[1])

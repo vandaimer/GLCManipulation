@@ -24,7 +24,7 @@
                             {% for i in range(len(gramaticas)) %}
                                 <tr>
                                     <td>#{{i}}</td>
-                                    <td>{{ gramaticas[i].producoes }}</td>
+                                    <td>{{ gramaticas[i].identificador }}</td>
                                     <td><a class="pure-button pure-button-primary" href="edit/{{i}}">EDITAR</a> <a class="pure-button pure-button-primary" href="delete/{{i}}">EXCLUIR</a> <a class="pure-button pure-button-primary" href="details/{{i}}">DETALHES</a> </td>
                                 </tr>
                             {% end %}

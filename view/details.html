@@ -89,9 +89,12 @@
 											{% for x in recursao_esquerda_indireta %}
 												{{x}}
 											{% end %}
-										{% end %}
-									</td>
-									<td>NAO - arrumar çaporra</td></tr>
+                                        {% end %}
+                                        {% if not len(recursao_esquerda_direta) and not len(recursao_esquerda_indireta)%}
+                                            SEM RECURSÃO A ESQUERDA
+                                        {% end %}
+                                    </td>
+                                    <td>NAO - arrumar çaporra</td></tr>
 							</tbody>
 						</table>
 					</div>

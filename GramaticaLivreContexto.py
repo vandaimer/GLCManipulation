@@ -1,9 +1,11 @@
+from collections import OrderedDict
 import string
 import re
 
 class GramaticaLivreContexto:
-    def __init__(self):
-        self.producoes = {}
+    def __init__(self, identificador = None):
+        self.producoes = OrderedDict()
+        self.identificador = identificador or ""
         self.inicial = ""
 
     def adiciona_producao(self, nao_terminal, forma_sentencial):
