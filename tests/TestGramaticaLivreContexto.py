@@ -148,8 +148,8 @@ class TestGramaticaLivreContexto(unittest.TestCase):
         # self.glc.adiciona_producao("C", "c C")
         # self.glc.adiciona_producao("C", "&")
 
-        self.glc.adiciona_producao("S", "A b C D")
-        self.glc.adiciona_producao("S", "E F")
+        self.glc.adiciona_producao("S", "A b C D | E F")
+        # self.glc.adiciona_producao("S", "E F")
         self.glc.adiciona_producao("A", "a A")
         self.glc.adiciona_producao("A", "a C")
         self.glc.adiciona_producao("A", "a D")
@@ -219,4 +219,29 @@ class TestGramaticaLivreContexto(unittest.TestCase):
         # self.glc.get_first("C")
         # self.glc.get_follow("C")
         self.assertFalse(self.glc.is_LL1())
+
+    def test_TP(self):
+        # self.glc.adiciona_producao("S", "A b C D")
+        # self.glc.adiciona_producao("S", "E F")
+        # self.glc.adiciona_producao("A", "a A")
+        # self.glc.adiciona_producao("A", "a C")
+        # self.glc.adiciona_producao("A", "a D")
+        # self.glc.adiciona_producao("A", "&")
+        # self.glc.adiciona_producao("C", "E C F")
+        # self.glc.adiciona_producao("C", "c")
+        # self.glc.adiciona_producao("D", "C D")
+        # self.glc.adiciona_producao("D", "d D d")
+        # self.glc.adiciona_producao("D", "&")
+        # self.glc.adiciona_producao("E", "a E")
+        # self.glc.adiciona_producao("E", "e E")
+        # self.glc.adiciona_producao("E", "&")
+        # self.glc.adiciona_producao("F", "F S")
+        # self.glc.adiciona_producao("F", "f F")
+        # self.glc.adiciona_producao("F", "g")
+
+        self.glc.adiciona_producao("S", "A b C")
+        self.glc.adiciona_producao("A", "a")
+        self.glc.adiciona_producao("C", "c")
+
+        self.glc.TP()
 

@@ -1,5 +1,7 @@
+import CodeGeneratorBackend
 import string
 import re
+import collections
 
 class GramaticaLivreContexto:
     def __init__(self):
@@ -96,7 +98,7 @@ class GramaticaLivreContexto:
         return dict_follows
 
     def get_first(self, nao_terminal):
-        if nao_terminal in string.ascii_lowercase:
+        if nao_terminal in string.ascii_lowercase or nao_terminal == "&":
             return nao_terminal
         first = []
         for forma_sentencial in self.producoes[nao_terminal]:
@@ -191,3 +193,41 @@ class GramaticaLivreContexto:
         if not self.condicao3():
             return False
         return True
+
+    def TP(self):
+        tabela = {}
+        if self.is_LL1():
+            epsilon = False
+            for nao_terminal in self.producoes.keys():
+                for producao in self.producoes[nao_terminal]:
+                    # print("NT: ", nao_terminal, "producao: ", producao)
+                    for n in self.get_first(producao[0]):
+                        if n != "&":
+                            if nao_terminal not in tabela:
+                                tabela[nao_terminal] = {}
+                            if n not in tabela[nao_terminal]:
+                                tabela[nao_terminal][n] = None
+                            tabela[nao_terminal][n] = producao
+                        elif n == "&":
+                            epsilon = True
+                    if producao[0] in string.ascii_uppercase and epsilon:
+                        for m in self.get_follow(producao[0]):
+                            if nao_terminal not in tabela:
+                                tabela[nao_terminal] = {}
+                            if m not in tabela[nao_terminal]:
+                                tabela[nao_terminal][m] = None
+                            tabela[nao_terminal][m] = producao
+                        epsilon = False
+        print(tabela)
+        return tabela
+
+    def parser(self):
+        c = CodeGeneratorBackend.CodeGeneratorBackend()
+        c.begin(tab="    ")
+
+        c.write("for i in range(1000):\n")
+        c.indent()
+        c.write("print 'code generation is trivial'")
+        c.dedent()
+
+        print(c.end())
