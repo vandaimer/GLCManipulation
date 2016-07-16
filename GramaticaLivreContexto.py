@@ -130,7 +130,7 @@ class GramaticaLivreContexto:
                     first.append("&")
             # print(forma_sentencial, cont, epsilon)
 
-        # print("First de ", nao_terminal, first)
+        print("First de ", nao_terminal, first)
         return first
 
     def get_follow(self, nao_terminal):
@@ -168,5 +168,26 @@ class GramaticaLivreContexto:
                                 epsilon = False
                     cont += 1
                 cont = 0
-        # print("Follow de ", nao_terminal, follow)
+        print("Follow de ", nao_terminal, follow)
         return follow
+
+    def condicao3(self):
+        for nao_terminal in self.producoes.keys():
+            first_list = []
+            for first in self.get_first(nao_terminal):
+                first_list.append(first)
+            for follow in self.get_follow(nao_terminal):
+                if follow in first_list:
+                    return False
+        return True
+
+    def is_LL1(self):
+        if self.recursao_esquerda() != []:
+            return False
+        if self.nd_direto() != []:
+            return False
+        if self.nd_indireto() != []:
+            return False
+        if not self.condicao3():
+            return False
+        return True
