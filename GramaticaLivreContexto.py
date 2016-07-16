@@ -27,6 +27,60 @@ class GramaticaLivreContexto:
                         break
         return list_to_return
 
+    def nd_direto(self):
+        list_to_return = []
+        for nao_terminal in self.producoes.keys():
+            terminais = []
+            for forma_sentencial in self.producoes[nao_terminal]:
+                terminal = forma_sentencial[0]
+                if terminal in terminais and nao_terminal not in list_to_return:
+                    list_to_return.append(nao_terminal)
+                if terminal in string.ascii_lowercase or terminal in string.digits:
+                    terminais.append(terminal)
+
+        print("ND Direto: ", list_to_return)
+        return list_to_return
+
+    def nd_indireto(self):
+        list_to_return = []
+        epsilon = False
+        for nao_terminal in self.producoes.keys():
+            simbolos = []
+            for forma_sentencial in self.producoes[nao_terminal]:
+                simbolo = forma_sentencial[0]
+                if simbolo in string.ascii_lowercase or simbolo in string.digits:
+                    simbolos.append(simbolo)
+                elif simbolo in string.ascii_uppercase:
+                    for f in self.get_first(simbolo):
+                        if f != "&":
+                            if f in simbolos and nao_terminal not in list_to_return:
+                                list_to_return.append(nao_terminal)
+                            simbolos.append(f)
+                        elif f == "&":
+                            epsilon = True
+                    if epsilon:
+                        i = 2
+                        while len(forma_sentencial) >= i and epsilon:
+                            if forma_sentencial[i] in string.ascii_lowercase or simbolo in string.digits:
+                                if forma_sentencial[i] in simbolos and nao_terminal not in list_to_return:
+                                    list_to_return.append(nao_terminal)
+                                simbolos.append(forma_sentencial[i])
+                            elif forma_sentencial[i] in string.ascii_uppercase:
+                                for m in self.get_first(forma_sentencial[i]):
+                                    if m != "&":
+                                        if m in simbolos and nao_terminal not in list_to_return:
+                                            list_to_return.append(nao_terminal)
+                                        simbolos.append(m)
+                                        epsilon = False
+                                    elif m == "&":
+                                        epsilon = True
+                            i += 2
+
+        print("Simbolos", simbolos)
+        print("ND Indireto: ", list_to_return)
+        return list_to_return
+
+
     def get_all_first(self):
         dict_first = {}
         for nao_terminal in self.producoes.keys():
