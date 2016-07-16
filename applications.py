@@ -46,12 +46,15 @@ class EditHandler(tornado.web.RequestHandler):
     def get(self, id):
         id = int(id)
         gramatica = self.gerenciador_glc.gramaticas[id]
-        self.render("edit.html", producoes=gramatica.producoes, id=id)
+        identificador = gramatica.identificador
+        self.render("edit.html", producoes=gramatica.producoes, identificador=identificador,
+                    id=id)
 
     def post(self, id):
         id = int(id)
         producoes = self.get_arguments('producao[]')
-        nGramatica = GramaticaLivreContexto()
+        identificador = self.get_argument('identificador')
+        nGramatica = GramaticaLivreContexto(identificador)
         for producao in producoes:
             producao = producao.split(' -> ')
             nGramatica.adiciona_producao(producao[0], producao[1])
@@ -85,11 +88,15 @@ class DetailsHandler(tornado.web.RequestHandler):
         id = int(id)
         gramatica = self.gerenciador_glc.obtem_by_index(id)
         producoes = gramatica.producoes
-        recursao = gramatica.recursao_esquerda()
+        recursao_esquerda_direta = gramatica.recursao_esquerda_direta()
+        recursao_esquerda_indireta = gramatica.recursao_esquerda_indireta()
         if gramatica != False:
             first = gramatica.get_all_first()
             follow = gramatica.get_all_follow()
-            self.render("details.html", producoes=producoes, recursao=recursao, first=first, follow=follow)
+            self.render("details.html", producoes=producoes,
+                        recursao_esquerda_direta=recursao_esquerda_direta,
+                        recursao_esquerda_indireta=recursao_esquerda_indireta,
+                        first=first, follow=follow)
 
 
 def make_app():

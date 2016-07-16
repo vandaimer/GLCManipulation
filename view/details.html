@@ -77,22 +77,30 @@
 							<tbody>
 								<tr>
 									<td>
-										{% if len(recursao) %}
-											SIM: <br /> <br />
-											{% for x in recursao %}
+										{% if len(recursao_esquerda_direta) %}
+											DIRETA: <br /> <br />
+											{% for x in recursao_esquerda_direta %}
 												{{x}}
 											{% end %}
-										{% else %}
-											NÃO
 										{% end %}
-									</td>
-								<td>NAO - arrumar çaporra</td></tr>
+										<br /> <br />
+										{% if len(recursao_esquerda_indireta) %}
+											INDIRETA: <br /> <br />
+											{% for x in recursao_esquerda_indireta %}
+												{{x}}
+											{% end %}
+                                        {% end %}
+                                        {% if not len(recursao_esquerda_direta) and not len(recursao_esquerda_indireta)%}
+                                            SEM RECURSÃO A ESQUERDA
+                                        {% end %}
+                                    </td>
+                                    <td>NAO - arrumar çaporra</td></tr>
 							</tbody>
 						</table>
 					</div>
 				</div>
-            </div>
-            <div class="pure-u-1-3"></div>
-        </div>
-    </body>
+			</div>
+			<div class="pure-u-1-3"></div>
+		</div>
+	</body>
 </html>

@@ -1,11 +1,13 @@
+from collections import OrderedDict
 import CodeGeneratorBackend
 import string
 import re
 import collections
 
 class GramaticaLivreContexto:
-    def __init__(self):
-        self.producoes = {}
+    def __init__(self, identificador = None):
+        self.producoes = OrderedDict()
+        self.identificador = identificador or ""
         self.inicial = ""
 
     def adiciona_producao(self, nao_terminal, forma_sentencial):
@@ -17,16 +19,54 @@ class GramaticaLivreContexto:
         self.producoes[nao_terminal].append(forma_sentencial)
         return True
 
-    #SO TA VERIFICANDO RECURSAO ESQUERDA
-    def recursao_esquerda(self):
+    def recursao_esquerda_direta(self):
+        list_to_return = []
+        for nao_terminal in self.producoes.keys():
+            lista_nao_terminais = self._recursao_esquerda_direta(nao_terminal)
+            if len(lista_nao_terminais):
+                list_to_return.append(lista_nao_terminais)
+        return list_to_return
+
+    def recursao_esquerda_indireta(self):
+        list_to_return = []
+        for nao_terminal in self.producoes.keys():
+            lista_nao_terminais = self._recursao_esquerda_indireta(nao_terminal)
+            if len(lista_nao_terminais):
+                list_to_return.append(lista_nao_terminais)
+        return list_to_return
+
+    def _recursao_esquerda_direta(self, n_terminal):
+        producoes = self.producoes[n_terminal][0]
+        lista_producoes = producoes.split('|')
         list_to_return  = []
-        for nt, producao in self.producoes.items():
-            if nt in producao[0]:
-                split = producao[0].split('|')
-                for forma_sentencial in split:
-                    if nt in forma_sentencial:
-                        list_to_return.append("%s -> %s" % (nt, forma_sentencial.strip()))
+        for producao in lista_producoes:
+            if n_terminal == producao.strip()[0]:
+                list_to_return.append(n_terminal)
+                break
+        return list_to_return
+
+    def _recursao_esquerda_indireta(self, n_terminal):
+        producoes = self.producoes[n_terminal][0]
+        lista_nao_terminais = self._obtem_nao_terminais_esquerda(n_terminal)
+        list_to_return  = []
+        for x in lista_nao_terminais:
+            if x in self.producoes:
+                producoes = self.producoes[x][0]
+                lista_producoes = producoes.split('|')
+                for producao in lista_producoes:
+                    if n_terminal == producao.strip()[0]:
+                        list_to_return.append(x)
                         break
+        return list_to_return
+
+    def _obtem_nao_terminais_esquerda(self, n_terminal):
+        producoes = self.producoes[n_terminal][0]
+        lista_producoes = producoes.split('|')
+        list_to_return  = []
+        for producao in lista_producoes:
+            primeiro_simbolo = producao.strip()[0]
+            if producao.strip()[0].isupper() and primeiro_simbolo != n_terminal:
+                list_to_return.append(primeiro_simbolo)
         return list_to_return
 
     def nd_direto(self):
@@ -81,7 +121,6 @@ class GramaticaLivreContexto:
         print("Simbolos", simbolos)
         print("ND Indireto: ", list_to_return)
         return list_to_return
-
 
     def get_all_first(self):
         dict_first = {}
@@ -170,7 +209,6 @@ class GramaticaLivreContexto:
                                 epsilon = False
                     cont += 1
                 cont = 0
-        print("Follow de ", nao_terminal, follow)
         return follow
 
     def condicao3(self):
@@ -184,7 +222,9 @@ class GramaticaLivreContexto:
         return True
 
     def is_LL1(self):
-        if self.recursao_esquerda() != []:
+        if self.recursao_esquerda_direta() != []:
+            return False
+        if self.recursao_esquerda_indireta() != []:
             return False
         if self.nd_direto() != []:
             return False
