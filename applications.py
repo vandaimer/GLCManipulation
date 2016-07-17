@@ -57,8 +57,9 @@ class EditHandler(tornado.web.RequestHandler):
         nGramatica = GramaticaLivreContexto(identificador)
         for producao in producoes:
             producao = producao.split(' -> ')
-            nGramatica.adiciona_producao(producao[0], producao[1])
-
+            lista_forma_sentencial = producao[1].split('|')
+            for x in lista_forma_sentencial:
+                nGramatica.adiciona_producao(producao[0], x.strip())
         self.gerenciador_glc.gramaticas[id] = nGramatica
         save = self.gerenciador_glc.salvar()
         if not save:
@@ -90,12 +91,16 @@ class DetailsHandler(tornado.web.RequestHandler):
         producoes = gramatica.producoes
         recursao_esquerda_direta = gramatica.recursao_esquerda_direta()
         recursao_esquerda_indireta = gramatica.recursao_esquerda_indireta()
+        nd_direto = gramatica.nd_direto()
+        nd_indireto = gramatica.nd_indireto()
         if gramatica != False:
             first = gramatica.get_all_first()
             follow = gramatica.get_all_follow()
             self.render("details.html", producoes=producoes,
                         recursao_esquerda_direta=recursao_esquerda_direta,
                         recursao_esquerda_indireta=recursao_esquerda_indireta,
+                        nd_direto=nd_direto,
+                        nd_indireto=nd_indireto,
                         first=first, follow=follow)
 
 

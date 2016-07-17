@@ -22,7 +22,7 @@
 						{% for index,value in producoes.items() %}
 							<tr>
 								<td>{{index}}</td>
-								<td>{{value[0]}}</td>
+								<td>{{" | ".join(value)}}</td>
 							</tr>
 							{% end %}
 					</table>
@@ -71,7 +71,7 @@
 							<thead>
 								<tr>
 									<th>Tem recursão a esquerda?</th>
-									<th>É fatorada?</th>
+									<th>Está fatorada?</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -93,8 +93,27 @@
                                         {% if not len(recursao_esquerda_direta) and not len(recursao_esquerda_indireta)%}
                                             SEM RECURSÃO A ESQUERDA
                                         {% end %}
+
                                     </td>
-                                    <td>NAO - arrumar çaporra</td></tr>
+									<td>
+										{% if len(nd_direto) %}
+											DIRETA: <br /> <br />
+											{% for x in nd_direto %}
+												{{x}}
+											{% end %}
+										{% end %}
+										<br /> <br />
+										{% if len(nd_indireto) %}
+											INDIRETA: <br /> <br />
+											{% for x in nd_indireto %}
+												{{x}}
+											{% end %}
+                                        {% end %}
+                                        {% if not len(nd_direto) and not len(nd_indireto)%}
+                                            ESTÁ FATORADA.
+                                        {% end %}
+									</td>
+								</tr>
 							</tbody>
 						</table>
 					</div>

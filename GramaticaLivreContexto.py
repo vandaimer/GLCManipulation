@@ -5,9 +5,9 @@ import re
 import collections
 
 class GramaticaLivreContexto:
-    def __init__(self, identificador = None):
+    def __init__(self, identificador = ""):
         self.producoes = OrderedDict()
-        self.identificador = identificador or ""
+        self.identificador = identificador
         self.inicial = ""
 
     def adiciona_producao(self, nao_terminal, forma_sentencial):
@@ -80,7 +80,6 @@ class GramaticaLivreContexto:
                 if terminal in string.ascii_lowercase or terminal in string.digits:
                     terminais.append(terminal)
 
-        print("ND Direto: ", list_to_return)
         return list_to_return
 
     def nd_indireto(self):
@@ -118,8 +117,6 @@ class GramaticaLivreContexto:
                                         epsilon = True
                             i += 2
 
-        print("Simbolos", simbolos)
-        print("ND Indireto: ", list_to_return)
         return list_to_return
 
     def get_all_first(self):
@@ -141,7 +138,6 @@ class GramaticaLivreContexto:
             return nao_terminal
         first = []
         for forma_sentencial in self.producoes[nao_terminal]:
-            # print("forma_sentencial:", forma_sentencial)
             for simbolo in forma_sentencial:
                 if simbolo in string.ascii_lowercase or simbolo in string.digits or simbolo == "&":
                     if simbolo == forma_sentencial[0] and simbolo not in first:
@@ -151,7 +147,6 @@ class GramaticaLivreContexto:
             cont = 0
             epsilon = 0
             if forma_sentencial[0] in string.ascii_uppercase and forma_sentencial[0] != nao_terminal:
-                # print("forma_sentencial:", forma_sentencial)
                 for m in self.get_first(forma_sentencial[0]):
                     if m in string.ascii_lowercase and m not in first:
                         first.append(m)
@@ -169,9 +164,7 @@ class GramaticaLivreContexto:
                     i += 2
                 if cont == epsilon and "&" not in first:
                     first.append("&")
-            # print(forma_sentencial, cont, epsilon)
 
-        print("First de ", nao_terminal, first)
         return first
 
     def get_follow(self, nao_terminal):
@@ -240,7 +233,6 @@ class GramaticaLivreContexto:
             epsilon = False
             for nao_terminal in self.producoes.keys():
                 for producao in self.producoes[nao_terminal]:
-                    # print("NT: ", nao_terminal, "producao: ", producao)
                     for n in self.get_first(producao[0]):
                         if n != "&":
                             if nao_terminal not in tabela:
@@ -258,7 +250,6 @@ class GramaticaLivreContexto:
                                 tabela[nao_terminal][m] = None
                             tabela[nao_terminal][m] = producao
                         epsilon = False
-        print(tabela)
         return tabela
 
     def parser(self):

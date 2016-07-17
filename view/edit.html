@@ -23,7 +23,7 @@
 						<h4>Produções</h4>
                         {% if len(producoes) %}
                             {% for NT, producao in producoes.items() %}
-                                <input type="text" name="producao[]" value="{{NT}} -> {{''.join(producao)}}" class="producao">
+                                <input type="text" name="producao[]" value="{{NT}} -> {{' | '.join(producao)}}" class="producao">
                             {% end%}
                         {% else %}
                             <input type="text" name="producao[]" value="" class="producao">
