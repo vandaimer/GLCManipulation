@@ -1,5 +1,6 @@
 from GerenciadorGLC import GerenciadorGLC
 from GramaticaLivreContexto import GramaticaLivreContexto
+from subprocess import *
 import tornado.ioloop
 import tornado.web
 import tornado.template as Template
@@ -88,16 +89,14 @@ class DetailsHandler(tornado.web.RequestHandler):
     def post(self, id):
         id = int(id)
         sentenca = self.get_argument('sentenca')
-        import subprocess
 
         gramatica = self.gerenciador_glc.obtem_by_index(id)
+        result = Popen(['python', 'parser.py',sentenca], stdout=PIPE).communicate()[0].decode('utf-8')
 
-        result = os.system("python parser.py %s" % sentenca)
-        response = ""
-        if result == 0:
+        if result == "":
             response = "Sentença pertence a linguagem que a gramática representa"
         else:
-            response = "Sentença não pertence a linguagem que a gramática representa.\n TEM QUE ARRUMAR COLOCANDO O STDERR"
+            response = "Sentença não pertence a linguagem que a gramática representa. <br /> <strong>%s</strong>" % result
         return self.write({"response":response})
 
     def get(self, id):

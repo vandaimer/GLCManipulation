@@ -14,7 +14,7 @@ ParserGLC = {
 			data:{"sentenca":input.val()}
 		}).done(function( result ){
 			var response = result.response;
-			$("#result").text(response)
+			$("#result").html(response)
 		});
 	}
 }
