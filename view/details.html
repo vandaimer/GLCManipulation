@@ -4,6 +4,7 @@
         <title>Manipulacao GLC</title>
         <link rel="stylesheet" href="{{ static_url("pure.css") }}">
 		<script src="{{ static_url("jquery.js") }}"></script>
+		<script src="{{ static_url("details.js") }}"></script>
     </head>
     <body>
         <div class="pure-g">
@@ -107,7 +108,7 @@
 											INDIRETA: <br /> <br />
 											{% for x in nd_indireto %}
 												{{x}}
-											{% end %}
+												{% end %}
                                         {% end %}
                                         {% if not len(nd_direto) and not len(nd_indireto)%}
                                             ESTÁ FATORADA.
@@ -116,6 +117,21 @@
 								</tr>
 							</tbody>
 						</table>
+					</div>
+				</div>
+				<div class="pure-g">
+					<div class="pure-u-1-1">
+						<h2>Testar Sentença</h2>
+						<form action="parser" method="post" accept-charset="utf-8" class="pure-form">
+							<!-- <legend>Executar parse</legend> -->
+							<fieldset id="executar_parse" class="pure-group">
+								<h4>Sentença a ser testada</h4>
+								<input type="text" name="sentenca" id="sentenca"/>
+							</fieldset>
+						</form>
+						<p><input type="button" class="pure-button pure-button-primary" id="testar_sentenca" value="Testar"></p>
+						<h3>Resultado:</h3>
+						<p id="result"></p>
 					</div>
 				</div>
 			</div>

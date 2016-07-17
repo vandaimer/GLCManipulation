@@ -85,9 +85,25 @@ class DetailsHandler(tornado.web.RequestHandler):
     def initialize(self):
         self.gerenciador_glc = GerenciadorGLC()
 
+    def post(self, id):
+        id = int(id)
+        sentenca = self.get_argument('sentenca')
+        import subprocess
+
+        gramatica = self.gerenciador_glc.obtem_by_index(id)
+
+        result = os.system("python parser.py %s" % sentenca)
+        response = ""
+        if result == 0:
+            response = "Sentença pertence a linguagem que a gramática representa"
+        else:
+            response = "Sentença não pertence a linguagem que a gramática representa.\n TEM QUE ARRUMAR COLOCANDO O STDERR"
+        return self.write({"response":response})
+
     def get(self, id):
         id = int(id)
         gramatica = self.gerenciador_glc.obtem_by_index(id)
+        gramatica.parser()
         producoes = gramatica.producoes
         recursao_esquerda_direta = gramatica.recursao_esquerda_direta()
         recursao_esquerda_indireta = gramatica.recursao_esquerda_indireta()
