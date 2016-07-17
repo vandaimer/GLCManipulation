@@ -19,7 +19,7 @@ class CodeGeneratorBackend:
         return "".join(self.code)
 
     def write(self, string):
-        self.code.append(self.tab * self.level + string)
+        self.code.append(self.tab * self.level + string +"\n")
 
     def indent(self):
         self.level = self.level + 1

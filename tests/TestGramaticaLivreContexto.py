@@ -245,3 +245,9 @@ class TestGramaticaLivreContexto(unittest.TestCase):
 
         self.glc.TP()
 
+    def test_Parser(self):
+        self.glc.adiciona_producao("S", "A b C")
+        self.glc.adiciona_producao("A", "a")
+        self.glc.adiciona_producao("C", "c")
+
+        self.glc.parser()
