@@ -244,6 +244,8 @@ class GramaticaLivreContexto:
                     first_prod = []
                     i = 0
                     aux = True
+                    if producao == "&":
+                        first_prod.append("&")
                     while i <= len(producao) and aux:
                         prod = producao[i]
                         for j in self.get_first(prod):
@@ -266,8 +268,8 @@ class GramaticaLivreContexto:
                             tabela[nao_terminal][n] = producao
                         elif n == "&":
                             epsilon = True
-                    if producao[0] in string.ascii_uppercase and epsilon:
-                        for m in self.get_follow(producao[0]):
+                    if epsilon:
+                        for m in self.get_follow(nao_terminal):
                             if nao_terminal not in tabela:
                                 tabela[nao_terminal] = {}
                             if m not in tabela[nao_terminal]:
