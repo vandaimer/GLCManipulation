@@ -5,9 +5,9 @@ import re
 import collections
 
 class GramaticaLivreContexto:
-    def __init__(self, identificador = ""):
+    def __init__(self, identificador = None):
         self.producoes = OrderedDict()
-        self.identificador = identificador
+        self.identificador = identificador or ""
         self.inicial = ""
 
     def adiciona_producao(self, nao_terminal, forma_sentencial):
@@ -80,6 +80,7 @@ class GramaticaLivreContexto:
                 if terminal in string.ascii_lowercase or terminal in string.digits:
                     terminais.append(terminal)
 
+        print("ND Direto: ", list_to_return)
         return list_to_return
 
     def nd_indireto(self):
@@ -117,6 +118,8 @@ class GramaticaLivreContexto:
                                         epsilon = True
                             i += 2
 
+        print("Simbolos", simbolos)
+        print("ND Indireto: ", list_to_return)
         return list_to_return
 
     def get_all_first(self):
@@ -138,6 +141,7 @@ class GramaticaLivreContexto:
             return nao_terminal
         first = []
         for forma_sentencial in self.producoes[nao_terminal]:
+            # print("forma_sentencial:", forma_sentencial)
             for simbolo in forma_sentencial:
                 if simbolo in string.ascii_lowercase or simbolo in string.digits or simbolo == "&":
                     if simbolo == forma_sentencial[0] and simbolo not in first:
@@ -147,6 +151,7 @@ class GramaticaLivreContexto:
             cont = 0
             epsilon = 0
             if forma_sentencial[0] in string.ascii_uppercase and forma_sentencial[0] != nao_terminal:
+                # print("forma_sentencial:", forma_sentencial)
                 for m in self.get_first(forma_sentencial[0]):
                     if m in string.ascii_lowercase and m not in first:
                         first.append(m)
@@ -164,7 +169,9 @@ class GramaticaLivreContexto:
                     i += 2
                 if cont == epsilon and "&" not in first:
                     first.append("&")
+            # print(forma_sentencial, cont, epsilon)
 
+        print("First de ", nao_terminal, first)
         return first
 
     def get_follow(self, nao_terminal):
@@ -233,7 +240,24 @@ class GramaticaLivreContexto:
             epsilon = False
             for nao_terminal in self.producoes.keys():
                 for producao in self.producoes[nao_terminal]:
-                    for n in self.get_first(producao[0]):
+                    # print("NT: ", nao_terminal, "producao: ", producao)
+                    first_prod = []
+                    i = 0
+                    aux = True
+                    while i <= len(producao) and aux:
+                        prod = producao[i]
+                        for j in self.get_first(prod):
+                            if prod in string.ascii_uppercase and j not in first_prod:
+                                first_prod.append(j)
+                                if "&" not in self.get_first(prod):
+                                    aux = False
+                                    break
+                            elif prod in string.ascii_lowercase or prod in string.digits:
+                                first_prod.append(j)
+                                aux = False
+                                break
+                        i += 2
+                    for n in first_prod:
                         if n != "&":
                             if nao_terminal not in tabela:
                                 tabela[nao_terminal] = {}
@@ -250,6 +274,7 @@ class GramaticaLivreContexto:
                                 tabela[nao_terminal][m] = None
                             tabela[nao_terminal][m] = producao
                         epsilon = False
+        print(tabela)
         return tabela
 
     def parser(self):
@@ -279,8 +304,7 @@ class GramaticaLivreContexto:
         c.dedent()
         c.write("else:")
         c.indent()
-        c.write("sys.stdout.write(\"ERRO: esperava-se: \" + x)")
-        c.write("break")
+        c.write("raise SyntaxError(\"ERRO: esperava-se: \" + x)")
         c.dedent()
         c.dedent()
         c.write("elif x in nao_terminais:")
@@ -298,9 +322,9 @@ class GramaticaLivreContexto:
         c.dedent()
         c.write("else:")
         c.indent()
-        c.write("sys.stdout.write(\"ERRO: esperava-se: \" + x)")
-        c.write("break")
+        c.write("raise SyntaxError(\"ERRO: esperava-se: \" + x)")
 
         f = open('parser.py', 'w')
         f.write(c.end())
         f.close()
+        # print(c.end())
