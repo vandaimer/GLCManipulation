@@ -244,8 +244,6 @@ class GramaticaLivreContexto:
                     first_prod = []
                     i = 0
                     aux = True
-                    if producao == "&":
-                        first_prod.append("&")
                     while i <= len(producao) and aux:
                         prod = producao[i]
                         for j in self.get_first(prod):
@@ -255,9 +253,12 @@ class GramaticaLivreContexto:
                                     aux = False
                                     break
                             elif prod in string.ascii_lowercase or prod in string.digits:
-                                first_prod.append(j)
-                                aux = False
-                                break
+                                if prod not in first_prod:
+                                    first_prod.append(j)
+                                    aux = False
+                                    break
+                            elif prod == "&":
+                                first_prod.append("&")
                         i += 2
                     for n in first_prod:
                         if n != "&":
@@ -291,12 +292,18 @@ class GramaticaLivreContexto:
         c.write("terminais = string.ascii_lowercase + string.digits")
         c.write("nao_terminais = string.ascii_uppercase")
         c.write("pilha = [\"$\", " + '"' + self.inicial + '"]')
+        c.write("inicial = pilha[1]")
         c.write("entrada = sys.argv[1] + \"$\"")
         c.write("tabela = " + montagem)
-        c.write("while len(pilha) > 1:")
+        c.write("while len(pilha) > 1 or len(entrada) > 1:")
         c.indent()
         c.write("x = pilha[-1]")
         c.write("a = entrada[0]")
+        c.write('while x == "&":')
+        c.indent()
+        c.write("pilha.pop()")
+        c.write("x = pilha[-1]")
+        c.dedent()
         c.write("if x in terminais or x == '$':")
         c.indent()
         c.write("if x == a:")
@@ -323,15 +330,16 @@ class GramaticaLivreContexto:
         c.dedent()
         c.dedent()
         c.dedent()
+        c.write('elif x == inicial and a == "&" and tabela[inicial]["$"] == a:')
+        c.indent()
+        c.write("break")
+        c.dedent()
         c.write("else:")
         c.indent()
         c.write("sys.stdout.write(\"ERRO: esperava-se: \" + x)")
         c.write("break")
         c.dedent()
         c.dedent()
-        c.write('elif x == "&" and a == "$":')
-        c.indent()
-        c.write("break")
 
         f = open('parser.py', 'w')
         f.write(c.end())

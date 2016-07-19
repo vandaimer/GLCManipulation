@@ -240,6 +240,8 @@ class TestGramaticaLivreContexto(unittest.TestCase):
         # self.glc.adiciona_producao("F", "g")
 
         self.glc.adiciona_producao("S", "A b C")
+        self.glc.adiciona_producao("S", "&")
+        self.glc.adiciona_producao("A", "&")
         self.glc.adiciona_producao("A", "a")
         self.glc.adiciona_producao("C", "c")
 
@@ -247,6 +249,7 @@ class TestGramaticaLivreContexto(unittest.TestCase):
 
     def test_Parser(self):
         self.glc.adiciona_producao("S", "A b C")
+        self.glc.adiciona_producao("S", "&")
         self.glc.adiciona_producao("A", "&")
         self.glc.adiciona_producao("A", "a")
         self.glc.adiciona_producao("C", "c")
