@@ -327,6 +327,11 @@ class GramaticaLivreContexto:
         c.indent()
         c.write("sys.stdout.write(\"ERRO: esperava-se: \" + x)")
         c.write("break")
+        c.dedent()
+        c.dedent()
+        c.write('elif x == "&" and a == "$":')
+        c.indent()
+        c.write("break")
 
         f = open('parser.py', 'w')
         f.write(c.end())
