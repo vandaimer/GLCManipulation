@@ -209,6 +209,26 @@ class GramaticaLivreContexto:
                                 epsilon = False
                     cont += 1
                 cont = 0
+
+        for producao in self.producoes[self.inicial]:
+            if producao[-1] == nao_terminal and "$" not in follow:
+                follow.append("$")
+            dol = False
+            i = 0
+            while i <= len(producao):
+                if producao[-i] in string.ascii_uppercase:
+                    for producao_nt in self.producoes[producao[-i]]:
+                        for simbolo in producao_nt:
+                            if simbolo in string.ascii_lowercase:
+                                break
+                            elif simbolo in string.ascii_uppercase and "&" in self.get_first(simbolo) and "$" not in follow:
+                                dol = True
+                        if dol:
+                            follow.append("$")
+                            dol = False
+                else:
+                    break
+                i += 2
         return follow
 
     def condicao3(self):
@@ -216,21 +236,27 @@ class GramaticaLivreContexto:
             first_list = []
             for first in self.get_first(nao_terminal):
                 first_list.append(first)
-            for follow in self.get_follow(nao_terminal):
-                if follow in first_list:
-                    return False
+            if "&" in first_list:
+                for follow in self.get_follow(nao_terminal):
+                    if follow in first_list:
+                        return False
         return True
 
     def is_LL1(self):
         if self.recursao_esquerda_direta() != []:
+            print("req esq dir")
             return False
         if self.recursao_esquerda_indireta() != []:
+            print("req esq ind")
             return False
         if self.nd_direto() != []:
+            print("nd dir")
             return False
         if self.nd_indireto() != []:
+            print("nd ind")
             return False
         if not self.condicao3():
+            print("nao cond 3")
             return False
         return True
 
